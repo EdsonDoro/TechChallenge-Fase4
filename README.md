@@ -169,3 +169,47 @@ pytest -q
 ## Observação
 
 O PDF do desafio não impõe uma tecnologia específica para embeddings, banco vetorial ou LLM. A equipe deve justificar tecnicamente as escolhas realizadas.
+
+## Execução do RAG completo
+
+1. Baixe o CSV `olist_order_reviews_dataset.csv` e coloque-o em `data/raw/`.
+2. Crie o ambiente e instale as dependências:
+   ```bash
+   python -m venv .venv
+   # Windows
+   .venv\\Scripts\\activate
+   # Linux/macOS
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
+3. Copie `.env.example` para `.env` e informe `OPENAI_API_KEY` para habilitar a geração.
+4. Construa a base vetorial:
+   ```bash
+   python scripts/build_index.py
+   ```
+   O processo gera `data/vectorstore/index.faiss` e `data/vectorstore/documents.json`.
+5. Consulte pelo terminal:
+   ```bash
+   python scripts/query_rag.py "Quais são os principais problemas relacionados à entrega?"
+   ```
+6. Execute a aplicação:
+   ```bash
+   streamlit run app/streamlit_app.py
+   ```
+
+### Componentes implementados
+
+- **Pré-processamento:** limpeza, remoção de avaliações sem comentário e preservação de metadados.
+- **Embeddings:** `paraphrase-multilingual-MiniLM-L12-v2`, adequado para consultas em português sem depender de API para a etapa vetorial.
+- **Indexação:** FAISS com similaridade por produto interno e normalização dos vetores.
+- **Persistência:** índice e documentos são salvos em `data/vectorstore/`.
+- **Retrieval:** Top-K configurável com limiar mínimo de relevância.
+- **Generation:** LLM recebe somente o contexto recuperado e é instruído a citar IDs das evidências.
+- **Controle de insuficiência:** quando não há evidências acima do limiar, o pipeline responde explicitamente que a base não sustenta a pergunta.
+- **Rastreabilidade:** cada evidência mantém `document_id` e metadados da avaliação.
+- **Avaliação:** `precision@k`, `recall@k` e MRR estão disponíveis em `src/evaluation/evaluator.py`.
+- **Testes:** cobertura de recuperação, pipeline e cenário sem evidência em `tests/`.
+- **Notebook final:** `notebooks/00_rag_completo.ipynb`.
+
+> O arquivo CSV e os artefatos vetoriais não devem ser versionados. O índice pode ser reconstruído deterministically com `scripts/build_index.py`.
+
