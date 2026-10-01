@@ -1,3 +1,5 @@
+import os
+
 from openai import OpenAI
 
 
@@ -12,9 +14,38 @@ Responda em português do Brasil, de forma objetiva.
 
 
 class LLMGenerator:
-    def __init__(self, model: str = "gpt-4o-mini", api_key: str | None = None):
-        self.client = OpenAI(api_key=api_key) if api_key else OpenAI()
+    """Gerador compatível com OpenAI e Ollama local.
+
+    Com LLM_PROVIDER=ollama, a geração ocorre localmente e não exige
+    OPENAI_API_KEY nem créditos de API.
+    """
+
+    def __init__(
+        self,
+        model: str = "llama3.2",
+        api_key: str | None = None,
+        provider: str | None = None,
+        base_url: str | None = None,
+    ):
+        self.provider = (provider or os.getenv("LLM_PROVIDER", "ollama")).strip().lower()
         self.model = model
+
+        if self.provider == "ollama":
+            self.base_url = base_url or os.getenv(
+                "OLLAMA_BASE_URL", "http://localhost:11434/v1"
+            )
+            self.client = OpenAI(
+                base_url=self.base_url,
+                api_key="ollama",
+            )
+        elif self.provider == "openai":
+            self.base_url = base_url
+            self.client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
+        else:
+            raise ValueError(
+                f"LLM_PROVIDER='{self.provider}' não suportado. "
+                "Use 'ollama' ou 'openai'."
+            )
 
     @staticmethod
     def _context(evidence: list[dict]) -> str:
@@ -53,7 +84,7 @@ class LLMGenerator:
 
 
 class EvidenceOnlyGenerator:
-    """Gerador determinístico para testes e ambientes sem API."""
+    """Gerador determinístico para testes e ambientes sem LLM."""
 
     def generate(self, question: str, evidence: list[dict]) -> str:
         if not evidence:
