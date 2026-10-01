@@ -1,4 +1,3 @@
-import os
 import sys
 from pathlib import Path
 
@@ -25,7 +24,11 @@ def load_pipeline():
     index_dir = settings.data_dir / "vectorstore"
     retriever = VectorRetriever.load(index_dir)
     embedder = EmbeddingModel(settings.embedding_model)
-    generator = LLMGenerator(settings.llm_model)
+    generator = LLMGenerator(
+        model=settings.llm_model,
+        provider=settings.llm_provider,
+        base_url=settings.ollama_base_url if settings.llm_provider == "ollama" else None,
+    )
     return RAGPipeline(
         embedder,
         retriever,
@@ -35,8 +38,11 @@ def load_pipeline():
     )
 
 
-if not os.getenv("OPENAI_API_KEY"):
-    st.warning("OPENAI_API_KEY não configurada. A recuperação pode ser testada, mas a geração exige uma chave da OpenAI.")
+st.info(
+    f"LLM: {settings.llm_provider} / {settings.llm_model}. "
+    + ("Execução local e gratuita via Ollama." if settings.llm_provider == "ollama"
+       else "Execução via OpenAI API.")
+)
 
 question = st.text_area(
     "Pergunta",
