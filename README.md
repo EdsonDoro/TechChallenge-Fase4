@@ -65,7 +65,21 @@ https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data
 
 Os arquivos da base **não devem ser versionados no Git**. Coloque os CSVs em `data/raw/`.
 
-O arquivo principal para o desafio é `olist_order_reviews_dataset.csv`. Os demais CSVs podem ser usados para enriquecimento por metadados, como produto, pedido, entrega e categoria.
+O corpus textual principal é `olist_order_reviews_dataset.csv`. A implementação atual utiliza também as demais tabelas para enriquecer cada evidência sem duplicar avaliações: `olist_orders_dataset.csv`, `olist_order_items_dataset.csv`, `olist_customers_dataset.csv`, `olist_products_dataset.csv`, `olist_sellers_dataset.csv`, `olist_order_payments_dataset.csv` e `product_category_name_translation.csv`. A tabela `olist_geolocation_dataset.csv` permanece disponível para extensões geográficas.
+
+### Relacionamento utilizado no corpus
+
+```text
+reviews (review_id, order_id, review_score, comentário)
+              │
+              └── order_id ──> orders ──> customer_id ──> customers
+                                  │
+                                  ├── order_items ──> products ──> category translation
+                                  │              └── sellers
+                                  └── payments
+```
+
+Os itens, categorias, vendedores e formas de pagamento são agregados por pedido antes do enriquecimento. Assim, uma avaliação continua sendo uma única unidade semântica no índice vetorial.
 
 ## Requisitos atendidos pela estrutura
 
@@ -172,7 +186,7 @@ O PDF do desafio não impõe uma tecnologia específica para embeddings, banco v
 
 ## Execução do RAG completo
 
-1. Baixe o CSV `olist_order_reviews_dataset.csv` e coloque-o em `data/raw/`.
+1. Coloque todos os CSVs do dataset em `data/raw/`, mantendo estes nomes: `olist_order_reviews_dataset.csv`, `olist_orders_dataset.csv`, `olist_order_items_dataset.csv`, `olist_customers_dataset.csv`, `olist_products_dataset.csv`, `olist_sellers_dataset.csv`, `olist_order_payments_dataset.csv`, `product_category_name_translation.csv` e, opcionalmente, `olist_geolocation_dataset.csv`.
 2. Crie o ambiente e instale as dependências:
    ```bash
    python -m venv .venv
@@ -199,7 +213,7 @@ O PDF do desafio não impõe uma tecnologia específica para embeddings, banco v
 
 ### Componentes implementados
 
-- **Pré-processamento:** limpeza, remoção de avaliações sem comentário e preservação de metadados.
+- **Pré-processamento:** limpeza, remoção de avaliações sem comentário, junção das tabelas relacionais e preservação de metadados.
 - **Embeddings:** `paraphrase-multilingual-MiniLM-L12-v2`, adequado para consultas em português sem depender de API para a etapa vetorial.
 - **Indexação:** FAISS com similaridade por produto interno e normalização dos vetores.
 - **Persistência:** índice e documentos são salvos em `data/vectorstore/`.
