@@ -196,7 +196,7 @@ O PDF do desafio não impõe uma tecnologia específica para embeddings, banco v
    source .venv/bin/activate
    pip install -r requirements.txt
    ```
-3. Copie `.env.example` para `.env` e informe `OPENAI_API_KEY` para habilitar a geração.
+3. Instale o Ollama e execute `ollama run llama3.2`. O projeto usa esse LLM local como padrão e não exige créditos da API.
 4. Construa a base vetorial:
    ```bash
    python scripts/build_index.py
@@ -210,6 +210,25 @@ O PDF do desafio não impõe uma tecnologia específica para embeddings, banco v
    ```bash
    streamlit run app/streamlit_app.py
    ```
+
+### LLM gratuito/local
+
+A geração usa **Ollama + Llama 3.2** por padrão. O Ollama expõe uma API local e o projeto usa sua compatibilidade com a API de chat da OpenAI. Assim, a etapa de geração não depende de `OPENAI_API_KEY` nem de créditos de API.
+
+Comandos:
+
+```bash
+ollama run llama3.2
+ollama list
+```
+
+Para usar OpenAI como alternativa, configure no `.env`:
+
+```text
+LLM_PROVIDER=openai
+LLM_MODEL=gpt-4o-mini
+OPENAI_API_KEY=sua_chave
+```
 
 ### Componentes implementados
 
