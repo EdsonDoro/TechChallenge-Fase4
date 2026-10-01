@@ -12,31 +12,20 @@ from src.generation.llm import LLMGenerator
 from src.rag.pipeline import RAGPipeline
 from src.retrieval.retriever import VectorRetriever
 
-
 def main():
     parser = argparse.ArgumentParser(description="Consulta o RAG do Olist.")
     parser.add_argument("question", help="Pergunta em linguagem natural.")
     args = parser.parse_args()
-
     retriever = VectorRetriever.load(settings.data_dir / "vectorstore")
     embedder = EmbeddingModel(settings.embedding_model)
     generator = LLMGenerator(settings.llm_model)
-
-    pipeline = RAGPipeline(
-        embedder,
-        retriever,
-        generator,
-        top_k=settings.top_k,
-        min_relevance_score=settings.min_relevance_score,
-    )
+    pipeline = RAGPipeline(embedder, retriever, generator, settings.top_k, settings.min_relevance_score)
     result = pipeline.ask(args.question)
-
     print("\nRESPOSTA\n")
     print(result["answer"])
     print("\nEVIDÊNCIAS\n")
     for item in result["evidence"]:
         print(f"[{item['document_id']}] score={item['score']:.4f} | {item['text']}")
-
 
 if __name__ == "__main__":
     main()
