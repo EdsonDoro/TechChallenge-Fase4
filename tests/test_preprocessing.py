@@ -8,4 +8,4 @@ def test_prepare_reviews_removes_empty_comments():
     })
     result = prepare_reviews(df)
     assert len(result) == 1
-    assert result.iloc[0]["review_comment_message"] == "entrega rápida"
+    assert result.iloc[0]["review_comment_message"] == "Entrega rápida"
