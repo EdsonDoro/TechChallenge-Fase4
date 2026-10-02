@@ -142,7 +142,8 @@ O primeiro contém o índice vetorial e o segundo mantém o mapeamento entre pos
 Utilizar recuperação semântica com:
 
 - `TOP_K=5`;
-- `MIN_RELEVANCE_SCORE=0.25`.
+- `MIN_RELEVANCE_SCORE=0.25`;
+- `MIN_SCOPE_SCORE=0.55`.
 
 ### Justificativa
 
@@ -202,19 +203,19 @@ Assim, o LLM é tratado como componente de síntese, e não como substituto da b
 
 ---
 
-## 10. Controle de perguntas sem evidência
+## 10. Controle de perguntas sem evidência e fora do escopo
 
 ### Decisão
 
-Aplicar o limiar de relevância antes da geração.
+Separar candidatos recuperados de evidências consideradas suficientes. O pipeline usa o `MIN_RELEVANCE_SCORE` para eliminar vizinhos muito fracos e, em seguida, aplica um guardrail de suficiência: score semântico mais alto ou apoio lexical entre a pergunta e os textos recuperados.
 
-Quando nenhuma evidência supera o limiar, o pipeline não envia documentos ao gerador e retorna uma mensagem explícita de insuficiência.
+Quando não há candidatos, o status é `insufficient_evidence`. Quando há candidatos, mas a similaridade é baixa e não existe suporte lexical, o status é `out_of_scope`.
 
 ### Justificativa
 
-Essa estratégia reduz o risco de o modelo preencher lacunas com conhecimento externo ou informação inventada.
+FAISS sempre retorna os vizinhos mais próximos disponíveis. Portanto, apenas verificar se a lista de resultados não está vazia não é suficiente para concluir que a pergunta é respondível pela base. O segundo estágio reduz esse falso positivo e evita enviar contexto irrelevante ao LLM.
 
-Esse cenário também possui teste automatizado.
+O valor `MIN_SCOPE_SCORE=0.55` é configurável e deve ser tratado como guardrail heurístico, não como classificador perfeito de domínio. Uma avaliação anotada pode ser usada futuramente para calibrar esse parâmetro.
 
 ---
 
@@ -275,7 +276,7 @@ Ele demonstra:
 - persistência;
 - conclusão.
 
-**A versão executada do notebook é considerada final e não deve ser alterada como parte das correções de documentação.**
+**O notebook acompanha a implementação atual e demonstra explicitamente os cenários com evidência, insuficiência e fora do escopo.**
 
 ---
 
