@@ -32,12 +32,14 @@ def main():
         settings.top_k,
         settings.min_relevance_score,
         settings.min_scope_score,
+        settings.min_domain_score,
     )
     result = pipeline.ask(args.question)
 
     print("\nRESPOSTA\n")
     print(result["answer"])
     print(f"\nSTATUS DA EVIDÊNCIA: {result['evidence_status']}")
+    print(f"SCORE DE DOMÍNIO: {result['domain_score']:.4f}")
     print(f"SCORE MÁXIMO RECUPERADO: {result['top_retrieval_score']}")
     print("\nEVIDÊNCIAS CONSIDERADAS SUFICIENTES\n")
     for item in result["evidence"]:
