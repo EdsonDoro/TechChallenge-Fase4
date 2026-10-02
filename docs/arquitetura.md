@@ -133,8 +133,9 @@ O componente `src/rag/pipeline.py` coordena:
 2. geração do embedding;
 3. recuperação;
 4. aplicação do critério de relevância;
-5. envio das evidências ao gerador;
-6. retorno da resposta e das evidências.
+5. validação de suficiência da evidência, separando candidatos recuperados de evidências aceitas;
+6. envio apenas das evidências aceitas ao gerador;
+7. retorno da resposta, status e rastreabilidade.
 
 Essa camada não implementa a lógica específica do modelo de linguagem. Ela apenas orquestra os componentes.
 
@@ -155,19 +156,23 @@ O prompt de sistema estabelece que o modelo:
 - deve citar os identificadores dos documentos;
 - deve responder em português.
 
-## 9. Controle de insuficiência
+## 9. Controle de insuficiência e fora do escopo
 
-A arquitetura possui dois mecanismos complementares:
+A arquitetura possui três mecanismos complementares:
 
 ### Recuperação
 
 Se nenhum documento ultrapassar `MIN_RELEVANCE_SCORE`, a lista de evidências fica vazia.
 
+### Validação de suficiência
+
+A recuperação vetorial produz candidatos. O pipeline verifica o score máximo e o apoio lexical entre a pergunta e os textos recuperados. Quando a similaridade é baixa e não existe apoio lexical, os candidatos não são tratados como evidência suficiente e a consulta é classificada como `out_of_scope`.
+
 ### Geração
 
-Se a lista estiver vazia, o gerador retorna uma resposta explícita informando que não há evidências suficientes.
+Somente evidências aceitas são enviadas ao LLM. Quando não há evidência suficiente, a resposta informa a limitação em vez de preencher a lacuna com conhecimento externo.
 
-Essa separação evita que o LLM seja chamado para "preencher" uma lacuna de conhecimento com informação não suportada pela base.
+Essa separação é importante porque um índice vetorial sempre consegue retornar vizinhos; vizinho recuperado não significa, por si só, evidência adequada.
 
 ## 10. Interfaces
 
