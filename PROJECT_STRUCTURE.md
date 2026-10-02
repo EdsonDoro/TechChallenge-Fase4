@@ -116,7 +116,7 @@ Contém o notebook final da entrega:
 
 Esse notebook consolida a jornada completa do projeto e foi executado de ponta a ponta.
 
-**A versão executada do notebook é um artefato final da entrega e não deve ser alterada nas atualizações de documentação.**
+**O notebook deve permanecer alinhado à implementação de `src/` e ser reexecutado após alterações no pipeline que afetem seus resultados.**
 
 ### `tests/`
 
