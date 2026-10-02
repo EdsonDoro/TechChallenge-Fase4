@@ -36,6 +36,7 @@ def load_pipeline():
         top_k=settings.top_k,
         min_relevance_score=settings.min_relevance_score,
         min_scope_score=settings.min_scope_score,
+        min_domain_score=settings.min_domain_score,
     )
 
 
