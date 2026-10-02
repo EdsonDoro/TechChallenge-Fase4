@@ -255,7 +255,7 @@ Separar a implementação em módulos:
 
 Essa separação evita concentrar toda a lógica no notebook.
 
-O notebook `00_rag_completo.ipynb` funciona como artefato demonstrativo e acadêmico, enquanto `src/` contém a implementação reutilizável.
+O notebook `00_rag_completo.ipynb` funciona como artefato demonstrativo e acadêmico, enquanto `src/` contém a implementação reutilizável. Após alterações no notebook ou no pipeline, a execução versionada deve ser atualizada.
 
 ---
 
