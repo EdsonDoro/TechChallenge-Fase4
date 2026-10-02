@@ -120,6 +120,7 @@ As configurações padrão são:
 - `TOP_K=5`
 - `MIN_RELEVANCE_SCORE=0.25`
 - `MIN_SCOPE_SCORE=0.55`
+- `MIN_DOMAIN_SCORE=0.45`
 
 Esses parâmetros ficam configuráveis no ambiente para permitir experimentação sem alterar o código.
 
