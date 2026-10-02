@@ -143,7 +143,8 @@ Utilizar recuperação semântica com:
 
 - `TOP_K=5`;
 - `MIN_RELEVANCE_SCORE=0.25`;
-- `MIN_SCOPE_SCORE=0.55`.
+- `MIN_SCOPE_SCORE=0.55`;
+- `MIN_DOMAIN_SCORE=0.45`.
 
 ### Justificativa
 
@@ -354,4 +355,4 @@ Não foi incorporada à implementação atual. Pode ser uma evolução futura co
 | Persistência | FAISS + JSON |
 | Interface | Notebook + CLI + Streamlit |
 | Avaliação | Precision@K, Recall@K e MRR |
-| Controle de evidência | limiar + prompt grounded |
+| Controle de evidência | limiar de relevância + validação semântica de domínio + prompt grounded |
