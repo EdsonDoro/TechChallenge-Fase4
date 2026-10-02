@@ -26,13 +26,20 @@ def main():
         base_url=settings.ollama_base_url if settings.llm_provider == "ollama" else None,
     )
     pipeline = RAGPipeline(
-        embedder, retriever, generator, settings.top_k, settings.min_relevance_score
+        embedder,
+        retriever,
+        generator,
+        settings.top_k,
+        settings.min_relevance_score,
+        settings.min_scope_score,
     )
     result = pipeline.ask(args.question)
 
     print("\nRESPOSTA\n")
     print(result["answer"])
-    print(f"\nSTATUS DA EVIDÊNCIA: {result[\'evidence_status\']}")\n    print(f"SCORE MÁXIMO RECUPERADO: {result[\'top_retrieval_score\']}")\n    print("\nEVIDÊNCIAS CONSIDERADAS SUFICIENTES\n")
+    print(f"\nSTATUS DA EVIDÊNCIA: {result['evidence_status']}")
+    print(f"SCORE MÁXIMO RECUPERADO: {result['top_retrieval_score']}")
+    print("\nEVIDÊNCIAS CONSIDERADAS SUFICIENTES\n")
     for item in result["evidence"]:
         print(f"[{item['document_id']}] score={item['score']:.4f} | {item['text']}")
 
