@@ -20,6 +20,7 @@ class Settings:
     )
     top_k: int = int(os.getenv("TOP_K", "5"))
     min_relevance_score: float = float(os.getenv("MIN_RELEVANCE_SCORE", "0.25"))
+    min_scope_score: float = float(os.getenv("MIN_SCOPE_SCORE", "0.55"))
 
 
 settings = Settings()
