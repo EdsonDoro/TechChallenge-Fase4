@@ -158,7 +158,7 @@ Um requisito importante da solução é evitar respostas aparentemente plausíve
 
 O pipeline possui um limiar mínimo de relevância. Quando nenhum candidato ultrapassa esse limiar, a etapa de geração recebe uma lista vazia e retorna explicitamente que não há evidências suficientes para responder.
 
-Além disso, a implementação diferencia **candidatos recuperados** de **evidências suficientes**. O FAISS sempre pode retornar os vizinhos mais próximos, inclusive para uma pergunta alheia ao domínio. Por isso, após a recuperação, o pipeline aplica um segundo guardrail configurável (`MIN_SCOPE_SCORE`) e verifica apoio lexical entre a pergunta e os textos recuperados. Quando a similaridade é baixa e não há apoio lexical, a consulta recebe o status `out_of_scope` e nenhum documento é enviado ao LLM.
+Além disso, a implementação diferencia **candidatos recuperados** de **evidências suficientes**. O FAISS sempre pode retornar os vizinhos mais próximos, inclusive para uma pergunta alheia ao domínio. Por isso, após a recuperação, o pipeline aplica dois guardrails configuráveis: `MIN_SCOPE_SCORE` sobre o melhor candidato e `MIN_DOMAIN_SCORE` sobre a similaridade da pergunta com âncoras semânticas curadas do domínio Olist. Ambos precisam ser satisfeitos; caso contrário, a consulta recebe `out_of_scope` e nenhum documento é enviado ao LLM.
 
 Esse comportamento é importante em um sistema de VoC porque uma resposta inventada pode transformar uma hipótese do modelo em uma falsa conclusão sobre a experiência dos clientes.
 
