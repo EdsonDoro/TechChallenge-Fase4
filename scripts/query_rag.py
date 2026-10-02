@@ -32,7 +32,7 @@ def main():
 
     print("\nRESPOSTA\n")
     print(result["answer"])
-    print("\nEVIDÊNCIAS\n")
+    print(f"\nSTATUS DA EVIDÊNCIA: {result[\'evidence_status\']}")\n    print(f"SCORE MÁXIMO RECUPERADO: {result[\'top_retrieval_score\']}")\n    print("\nEVIDÊNCIAS CONSIDERADAS SUFICIENTES\n")
     for item in result["evidence"]:
         print(f"[{item['document_id']}] score={item['score']:.4f} | {item['text']}")
 
