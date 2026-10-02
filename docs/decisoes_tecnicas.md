@@ -210,13 +210,13 @@ Assim, o LLM é tratado como componente de síntese, e não como substituto da b
 
 Separar candidatos recuperados de evidências consideradas suficientes. O pipeline usa o `MIN_RELEVANCE_SCORE` para eliminar vizinhos muito fracos e, em seguida, aplica um guardrail de domínio e suficiência: o melhor score recuperado precisa atingir `MIN_SCOPE_SCORE` e a pergunta precisa atingir `MIN_DOMAIN_SCORE` contra as âncoras semânticas do domínio.
 
-Quando não há candidatos, o status é `insufficient_evidence`. Quando há candidatos, mas a similaridade é baixa e não existe suporte lexical, o status é `out_of_scope`.
+Quando não há candidatos, o status é `insufficient_evidence`. Quando há candidatos, mas o score de recuperação ou a afinidade semântica com o domínio não atingem seus limiares, o status é `out_of_scope`.
 
 ### Justificativa
 
 FAISS sempre retorna os vizinhos mais próximos disponíveis. Portanto, apenas verificar se a lista de resultados não está vazia não é suficiente para concluir que a pergunta é respondível pela base. O segundo estágio reduz esse falso positivo e evita enviar contexto irrelevante ao LLM.
 
-Os valores `MIN_SCOPE_SCORE=0.55` e `MIN_DOMAIN_SCORE=0.45` são configuráveis e devem ser tratados como guardrails heurísticos, não como classificador perfeito de domínio. Uma avaliação anotada pode ser usada futuramente para calibrar esse parâmetro.
+Os valores `MIN_SCOPE_SCORE=0.55` e `MIN_DOMAIN_SCORE=0.45` são configuráveis e devem ser tratados como guardrails heurísticos, não como classificador perfeito de domínio. Uma avaliação anotada pode ser usada futuramente para calibrar esses parâmetros.
 
 ---
 
