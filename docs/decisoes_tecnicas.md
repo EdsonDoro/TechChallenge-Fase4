@@ -293,9 +293,9 @@ Essas métricas foram escolhidas porque permitem avaliar objetivamente se os doc
 
 ### Limitação atual
 
-A infraestrutura de métricas está implementada, mas este repositório não apresenta resultados experimentais que não tenham sido efetivamente executados sobre um conjunto anotado.
+O repositório agora mantém um conjunto inicial anotado em `data/evaluation/retrieval_gold.json` e o script `scripts/evaluate_retrieval.py` para executar a avaliação de forma reprodutível. A avaliação mede o retrieval bruto, separadamente dos guardrails de domínio, evitando misturar qualidade da busca com controle de escopo.
 
-Portanto, resultados futuros devem ser registrados com:
+Os resultados devem ser registrados somente após execução efetiva e devem acompanhar:
 
 - perguntas utilizadas;
 - documentos considerados relevantes;
