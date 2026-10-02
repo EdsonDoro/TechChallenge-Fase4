@@ -58,9 +58,9 @@ if st.button("Consultar", type="primary", disabled=not question.strip()):
         st.subheader("Resposta")
         st.write(result["answer"])
 
-        st.subheader("Evidências recuperadas")
+        st.caption(\n            f"Status da evidência: {result[\'evidence_status\']} | " \n            f"score máximo recuperado: {result[\'top_retrieval_score\'] if result[\'top_retrieval_score\'] is not None else \'—\'}"\n        )\n\n        st.subheader("Evidências consideradas suficientes")
         if not result["evidence"]:
-            st.info("Nenhuma evidência ultrapassou o limiar de relevância.")
+            st.info("Nenhuma evidência foi considerada suficiente para sustentar a pergunta.")
         else:
             for item in result["evidence"]:
                 metadata = item.get("metadata", {})
