@@ -119,6 +119,7 @@ As configurações padrão são:
 
 - `TOP_K=5`
 - `MIN_RELEVANCE_SCORE=0.25`
+- `MIN_SCOPE_SCORE=0.55`
 
 Esses parâmetros ficam configuráveis no ambiente para permitir experimentação sem alterar o código.
 
@@ -150,11 +151,13 @@ Portanto, o LLM não é utilizado como fonte primária de conhecimento. Seu pape
 
 ---
 
-## 7. Controle de ausência de evidência
+## 7. Controle de ausência de evidência e fora do escopo
 
 Um requisito importante da solução é evitar respostas aparentemente plausíveis para perguntas que a base não consegue sustentar.
 
-O pipeline possui um limiar mínimo de relevância. Quando nenhuma evidência ultrapassa esse limiar, a etapa de geração recebe uma lista vazia e retorna explicitamente que não há evidências suficientes para responder.
+O pipeline possui um limiar mínimo de relevância. Quando nenhum candidato ultrapassa esse limiar, a etapa de geração recebe uma lista vazia e retorna explicitamente que não há evidências suficientes para responder.
+
+Além disso, a implementação diferencia **candidatos recuperados** de **evidências suficientes**. O FAISS sempre pode retornar os vizinhos mais próximos, inclusive para uma pergunta alheia ao domínio. Por isso, após a recuperação, o pipeline aplica um segundo guardrail configurável (`MIN_SCOPE_SCORE`) e verifica apoio lexical entre a pergunta e os textos recuperados. Quando a similaridade é baixa e não há apoio lexical, a consulta recebe o status `out_of_scope` e nenhum documento é enviado ao LLM.
 
 Esse comportamento é importante em um sistema de VoC porque uma resposta inventada pode transformar uma hipótese do modelo em uma falsa conclusão sobre a experiência dos clientes.
 
