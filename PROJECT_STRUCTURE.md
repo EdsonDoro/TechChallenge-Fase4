@@ -199,6 +199,7 @@ A estrutura foi organizada para permitir demonstrar cada etapa solicitada no des
 | Contexto RAG | `src/rag/` |
 | Geração | `src/generation/` |
 | Ausência de evidência | `src/rag/` + `src/generation/` |
+| Fora do escopo | `src/rag/pipeline.py` |
 | Avaliação | `src/evaluation/` |
 | Demonstração | `notebooks/00_rag_completo.ipynb` |
 | Execução CLI | `scripts/query_rag.py` |
