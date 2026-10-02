@@ -9,6 +9,7 @@ class RetrievalMetrics:
 
 
 def evaluate_retrieval(results, relevant_ids: set[str], k: int = 5) -> RetrievalMetrics:
+    """Calcula métricas sobre os candidatos recuperados, sem aplicar guardrails."""
     retrieved = [str(item["document_id"]) for item in results[:k]]
     relevant_ids = {str(value) for value in relevant_ids}
 
@@ -29,10 +30,14 @@ def evaluate_retrieval(results, relevant_ids: set[str], k: int = 5) -> Retrieval
 
 
 def evaluate_queries(pipeline, queries: list[dict], k: int = 5) -> list[dict]:
-    """Avalia um conjunto anotado: {'question': ..., 'relevant_ids': [...]}."""
+    """Avalia um conjunto anotado: {'question': ..., 'relevant_ids': [...]}.
+
+    A avaliação mede o retrieval bruto para não confundir qualidade de busca
+    com os guardrails de domínio/suficiência do pipeline.
+    """
     rows = []
     for item in queries:
-        results = pipeline.retrieve(item["question"])
+        results = pipeline.retrieve_candidates(item["question"])
         metrics = evaluate_retrieval(results, set(item["relevant_ids"]), k=k)
         rows.append(
             {
