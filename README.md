@@ -269,7 +269,7 @@ Ele consolida a jornada completa do projeto:
 13. persistência e recarga do índice;
 14. conclusão.
 
-**Este notebook foi executado de ponta a ponta e a versão versionada no repositório representa a execução final do trabalho.**
+**A versão anterior deste notebook foi executada de ponta a ponta. Após os ajustes finais de avaliação e auditoria de contexto, o notebook deve ser reexecutado para registrar os novos resultados.**
 
 O código de produção utilizado pelo notebook está em `src/`; portanto, o notebook funciona como demonstração reprodutível da solução, enquanto a lógica principal permanece organizada e reutilizável nos módulos Python.
 
