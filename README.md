@@ -205,6 +205,8 @@ TechChallenge-Fase4/
 ├── data/
 │   ├── raw/
 │   ├── processed/
+│   ├── evaluation/
+│   │   └── retrieval_gold.json
 │   └── vectorstore/
 ├── docs/
 │   ├── arquitetura.md
@@ -214,6 +216,7 @@ TechChallenge-Fase4/
 │   └── 00_rag_completo.ipynb
 ├── scripts/
 │   ├── build_index.py
+│   ├── evaluate_retrieval.py
 │   └── query_rag.py
 ├── src/
 │   ├── data/
@@ -344,6 +347,16 @@ python scripts/query_rag.py "Quais são os principais problemas relacionados à 
 streamlit run app/streamlit_app.py
 ```
 
+### Avaliação quantitativa do retrieval
+
+O conjunto anotado está em `data/evaluation/retrieval_gold.json`. Para reproduzir a avaliação após construir o índice:
+
+```bash
+python scripts/evaluate_retrieval.py
+```
+
+O script calcula Precision@K, Recall@K e MRR sobre o retrieval bruto, antes dos guardrails de domínio. Resultados numéricos só devem ser considerados finais após uma execução efetiva do script.
+
 ### Testes
 
 ```bash
@@ -362,7 +375,7 @@ O projeto possui `src/evaluation/evaluator.py` com suporte às métricas:
 
 A estrutura foi preparada para avaliação com perguntas anotadas e documentos relevantes esperados.
 
-Nesta versão, essas métricas são disponibilizadas como infraestrutura de avaliação; **não são apresentados neste README resultados experimentais que não tenham sido efetivamente executados e registrados**.
+O repositório agora mantém um conjunto inicial anotado em `data/evaluation/retrieval_gold.json` e o script `scripts/evaluate_retrieval.py` para execução reprodutível. **Resultados numéricos só devem ser considerados finais após a execução efetiva do script sobre o índice reconstruído.**
 
 Além da avaliação quantitativa da recuperação, o projeto contempla verificações qualitativas importantes para o requisito de RAG:
 
