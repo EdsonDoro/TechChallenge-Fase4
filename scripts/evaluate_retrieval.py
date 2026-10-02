@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 
 from config.settings import Settings
-from src.embeddings.embedder import SentenceTransformerEmbedder
+from src.embeddings.embedder import EmbeddingModel
 from src.evaluation.evaluator import evaluate_queries
 from src.retrieval.retriever import VectorRetriever
 from src.rag.pipeline import RAGPipeline
