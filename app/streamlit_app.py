@@ -62,6 +62,7 @@ if st.button("Consultar", type="primary", disabled=not question.strip()):
 
         st.caption(
             f"Status da evidência: {result['evidence_status']} | "
+            f"score de domínio: {result['domain_score']:.3f} | "
             f"score máximo recuperado: "
             f"{result['top_retrieval_score'] if result['top_retrieval_score'] is not None else '—'}"
         )
