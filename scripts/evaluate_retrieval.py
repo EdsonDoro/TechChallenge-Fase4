@@ -24,7 +24,7 @@ def main():
         queries = json.load(f)
 
     retriever = VectorRetriever.load(INDEX_DIR)
-    embedder = SentenceTransformerEmbedder(settings.embedding_model)
+    embedder = EmbeddingModel(settings.embedding_model)
     # O gerador não é necessário para avaliar a recuperação.
     pipeline = RAGPipeline(
         embedder,
