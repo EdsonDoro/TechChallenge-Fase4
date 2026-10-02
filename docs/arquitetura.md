@@ -166,7 +166,7 @@ Se nenhum documento ultrapassar `MIN_RELEVANCE_SCORE`, a lista de evidências fi
 
 ### Validação de suficiência
 
-A recuperação vetorial produz candidatos. O pipeline verifica o score máximo e o apoio lexical entre a pergunta e os textos recuperados. Quando a similaridade é baixa e não existe apoio lexical, os candidatos não são tratados como evidência suficiente e a consulta é classificada como `out_of_scope`.
+A recuperação vetorial produz candidatos. O pipeline verifica o score máximo e a similaridade da pergunta com âncoras semânticas curadas do domínio Olist. Ambos os sinais precisam superar seus limiares configuráveis. Caso contrário, os candidatos não são tratados como evidência suficiente e a consulta é classificada como `out_of_scope`.
 
 ### Geração
 
