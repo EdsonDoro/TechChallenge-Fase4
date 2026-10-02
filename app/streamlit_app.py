@@ -35,6 +35,7 @@ def load_pipeline():
         generator,
         top_k=settings.top_k,
         min_relevance_score=settings.min_relevance_score,
+        min_scope_score=settings.min_scope_score,
     )
 
 
@@ -58,7 +59,13 @@ if st.button("Consultar", type="primary", disabled=not question.strip()):
         st.subheader("Resposta")
         st.write(result["answer"])
 
-        st.caption(\n            f"Status da evidência: {result[\'evidence_status\']} | " \n            f"score máximo recuperado: {result[\'top_retrieval_score\'] if result[\'top_retrieval_score\'] is not None else \'—\'}"\n        )\n\n        st.subheader("Evidências consideradas suficientes")
+        st.caption(
+            f"Status da evidência: {result['evidence_status']} | "
+            f"score máximo recuperado: "
+            f"{result['top_retrieval_score'] if result['top_retrieval_score'] is not None else '—'}"
+        )
+
+        st.subheader("Evidências consideradas suficientes")
         if not result["evidence"]:
             st.info("Nenhuma evidência foi considerada suficiente para sustentar a pergunta.")
         else:
