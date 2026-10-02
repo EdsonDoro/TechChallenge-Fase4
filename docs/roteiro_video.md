@@ -92,13 +92,16 @@ Explicar o caminho:
 
 Esse é um dos pontos centrais da solução.
 
-## 8. Caso sem evidência
+## 8. Casos sem evidência e fora do escopo
 
-Executar uma pergunta que não seja sustentada pela base.
+Executar dois cenários:
 
-Mostrar que o sistema não tenta completar a resposta arbitrariamente e informa que não há evidências suficientes.
+1. uma pergunta sem evidência suficiente na base;
+2. uma pergunta claramente fora do domínio, por exemplo: "Qual é a previsão do tempo para amanhã?".
 
-Explicar o papel do `MIN_RELEVANCE_SCORE`.
+Mostrar a diferença entre candidatos recuperados pelo FAISS e evidências aceitas. No segundo cenário, mesmo que o FAISS retorne vizinhos, o guardrail deve produzir `out_of_scope`, `Evidências aceitas: 0` e `Tem evidência: False`.
+
+Explicar o papel conjunto de `MIN_RELEVANCE_SCORE`, `MIN_SCOPE_SCORE` e `MIN_DOMAIN_SCORE`.
 
 ## 9. Execução fora do notebook
 
