@@ -20,6 +20,7 @@ TechChallenge-Fase4/
 ├── data/
 │   ├── raw/                 # CSVs da Olist — não versionados
 │   ├── processed/           # artefatos intermediários, quando utilizados
+│   ├── evaluation/          # conjunto anotado para avaliação do retrieval
 │   └── vectorstore/         # índice FAISS + documentos persistidos
 │
 ├── docs/
@@ -32,6 +33,7 @@ TechChallenge-Fase4/
 │
 ├── scripts/
 │   ├── build_index.py
+│   ├── evaluate_retrieval.py
 │   └── query_rag.py
 │
 ├── src/
@@ -200,7 +202,8 @@ A estrutura foi organizada para permitir demonstrar cada etapa solicitada no des
 | Geração | `src/generation/` |
 | Ausência de evidência | `src/rag/` + `src/generation/` |
 | Fora do escopo | `src/rag/pipeline.py` |
-| Avaliação | `src/evaluation/` |
+| Avaliação | `src/evaluation/` + `data/evaluation/` |
+| Contexto auditável | `src/rag/pipeline.py` |
 | Demonstração | `notebooks/00_rag_completo.ipynb` |
 | Execução CLI | `scripts/query_rag.py` |
 | Interface | `app/streamlit_app.py` |
