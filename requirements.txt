@@ -1,0 +1,14 @@
+pandas>=2.2,<3
+numpy>=1.26,<3
+scikit-learn>=1.5,<2
+sentence-transformers>=3,<6
+faiss-cpu>=1.8,<2
+openai>=1.50,<3
+python-dotenv>=1.0,<2
+streamlit>=1.38,<2
+jupyter>=1.0,<2
+ipykernel>=6.29,<7
+matplotlib>=3.9,<4
+seaborn>=0.13,<1
+pytest>=8,<9
+tqdm>=4.66,<5
