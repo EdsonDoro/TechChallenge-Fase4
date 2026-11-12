@@ -443,3 +443,21 @@ O projeto implementa uma solução RAG completa para Voice of Customer sobre ava
 A principal preocupação metodológica foi manter a resposta vinculada à evidência recuperada. Para isso, o projeto combina preparação estruturada dos dados, embeddings multilíngues, recuperação vetorial, geração controlada por contexto, tratamento explícito de insuficiência de evidência e rastreabilidade por documento.
 
 A entrega também separa a lógica de produção em módulos Python e utiliza o notebook `00_rag_completo.ipynb` como demonstração acadêmica da jornada completa, permitindo relacionar as decisões de ciência de dados com sua implementação prática.
+
+---
+
+## 17. Video Apresentação
+
+<a href="https://youtu.be/" target="_blank">Assista a apresentação</a>
+
+
+---
+
+## 18. Autores - Grupo 92
+Projeto desenvolvido para o Tech Challenge - Fase 4.
+
+Integrantes:
+
+Alessandra M. Capecce,
+Alessandro P. dos Santos,
+Edson L. Doro
