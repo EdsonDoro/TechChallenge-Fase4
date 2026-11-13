@@ -161,7 +161,8 @@ def main():
             "Nenhuma pergunta pôde ser anotada. Verifique se o Ollama está ativo, "
             "se o modelo está instalado e se OLLAMA_BASE_URL está correto."
         )
-\n    annotated_rows = []
+
+    annotated_rows = []
     silver_queries = []
     for question, group_rows in grouped.items():
         relevant_ids = []
