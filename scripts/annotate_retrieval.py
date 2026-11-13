@@ -8,13 +8,16 @@ import argparse
 import csv
 import json
 import re
+import sys
 from collections import OrderedDict
 from datetime import datetime, timezone
 from pathlib import Path
 
-from config.settings import Settings
-
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from config.settings import Settings
 INPUT_FILE = ROOT / "data" / "evaluation" / "retrieval_annotation_candidates.csv"
 OUTPUT_FILE = ROOT / "data" / "evaluation" / "retrieval_annotation_auto.csv"
 SILVER_FILE = ROOT / "data" / "evaluation" / "retrieval_silver.json"
