@@ -2,7 +2,9 @@
   "summary": {
     "Precision@5": 0.27999999999999997,
     "Recall@5": 0.4,
-    "MRR": 0.4
+    "MRR": 0.4,
+    "queries": 5,
+    "annotation_status": "provisional"
   },
   "details": [
     {
