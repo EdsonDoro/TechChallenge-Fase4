@@ -26,7 +26,17 @@ def prepare_reviews(df: pd.DataFrame) -> pd.DataFrame:
         raise ValueError(f"Coluna obrigatória ausente: {TEXT_COLUMN}")
     data[TEXT_COLUMN] = data[TEXT_COLUMN].fillna("").map(clean_text)
     data = data[data[TEXT_COLUMN].str.len() > 0].copy()
-    data["document_id"] = data["review_id"].astype(str) if "review_id" in data.columns else [str(i) for i in range(len(data))]
+    if "review_id" in data.columns:
+        # O dataset Olist contém review_id repetidos em registros distintos.
+        # Preservamos todas as avaliações e criamos IDs técnicos únicos por ocorrência.
+        review_ids = data["review_id"].fillna("sem_review_id").astype(str)
+        occurrences = review_ids.groupby(review_ids, sort=False).cumcount()
+        data["document_id"] = review_ids.where(
+            occurrences.eq(0),
+            review_ids + "__dup_" + (occurrences + 1).astype(str),
+        )
+    else:
+        data["document_id"] = [str(i) for i in range(len(data))]
     for column in ("review_creation_date", "review_answer_timestamp", "order_purchase_timestamp", "order_delivered_customer_date", "order_estimated_delivery_date"):
         if column in data.columns: data[column] = pd.to_datetime(data[column], errors="coerce")
     return data.reset_index(drop=True)
