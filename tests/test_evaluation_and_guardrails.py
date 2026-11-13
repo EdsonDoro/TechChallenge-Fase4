@@ -47,3 +47,27 @@ def test_in_domain_question_with_weak_retrieval_is_insufficient_evidence():
     assert result["evidence_status"] == "insufficient_evidence"
     assert result["evidence"] == []
     assert "Não há evidências suficientes" in result["answer"]
+
+
+def test_auto_annotation_parser_accepts_json_and_clamps_confidence():
+    from scripts.annotate_retrieval import parse_model_response
+
+    result = parse_model_response(
+        '{"items":[{"document_id":"doc-1","label":"relevant","confidence":1.4,"reason":"direto"}]}',
+        {"doc-1", "doc-2"},
+    )
+    assert result["doc-1"]["auto_label"] == "relevant"
+    assert result["doc-1"]["auto_confidence"] == 1.0
+    assert result["doc-2"]["auto_label"] == "uncertain"
+    assert result["doc-2"]["auto_confidence"] == 0.0
+
+
+def test_auto_annotation_parser_handles_fenced_json_and_invalid_labels():
+    from scripts.annotate_retrieval import parse_model_response
+
+    result = parse_model_response(
+        '```json\\n{"items":[{"document_id":"doc-1","label":"maybe","confidence":"bad"}]}\\n```',
+        {"doc-1"},
+    )
+    assert result["doc-1"]["auto_label"] == "uncertain"
+    assert result["doc-1"]["auto_confidence"] == 0.0
