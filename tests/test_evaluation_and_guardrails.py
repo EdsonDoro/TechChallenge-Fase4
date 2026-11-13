@@ -66,7 +66,7 @@ def test_auto_annotation_parser_handles_fenced_json_and_invalid_labels():
     from scripts.annotate_retrieval import parse_model_response
 
     result = parse_model_response(
-        '```json\\n{"items":[{"document_id":"doc-1","label":"maybe","confidence":"bad"}]}\\n```',
+        '```json\n{"items":[{"document_id":"doc-1","label":"maybe","confidence":"bad"}]}\n```',
         {"doc-1"},
     )
     assert result["doc-1"]["auto_label"] == "uncertain"
