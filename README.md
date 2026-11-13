@@ -213,7 +213,12 @@ TechChallenge-Fase4/
 │   ├── decisoes_tecnicas.md
 │   └── roteiro_video.md
 ├── notebooks/
-│   └── 00_rag_completo.ipynb
+│   ├── 00_rag_completo.ipynb
+│   ├── 01_exploracao_olist.ipynb
+│   ├── 02_preparacao_base.ipynb
+│   ├── 03_embeddings_indexacao.ipynb
+│   ├── 04_avaliacao_rag.ipynb
+│   └── README.md
 ├── scripts/
 │   ├── build_index.py
 │   ├── evaluate_retrieval.py
@@ -246,9 +251,20 @@ TechChallenge-Fase4/
 
 ---
 
-## 10. Notebook final
+## 10. Notebooks da entrega
 
-O principal artefato didático da entrega é:
+A jornada foi organizada em quatro notebooks temáticos, cada um dedicado a uma etapa e reutilizando as implementações de `src/`:
+
+| Notebook | Objetivo |
+|---|---|
+| `01_exploracao_olist.ipynb` | Explorar a tabela de avaliações, dimensões, valores ausentes, notas e comentários |
+| `02_preparacao_base.ipynb` | Limpar avaliações, enriquecer metadados e construir documentos |
+| `03_embeddings_indexacao.ipynb` | Gerar embeddings, criar o índice FAISS, persistir e validar a busca |
+| `04_avaliacao_rag.ipynb` | Medir retrieval, inspecionar evidências e verificar cenários de insuficiência e domínio |
+
+Os notebooks temáticos devem ser executados na ordem apresentada. Os arquivos CSV originais precisam estar em `data/raw/`; o notebook de indexação gera os artefatos em `data/vectorstore/`, utilizados pelo notebook de avaliação.
+
+O principal artefato de demonstração integrada continua sendo:
 
 `notebooks/00_rag_completo.ipynb`
 
@@ -271,7 +287,7 @@ Ele consolida a jornada completa do projeto:
 
 **A versão anterior deste notebook foi executada de ponta a ponta. Após os ajustes finais de avaliação e auditoria de contexto, o notebook deve ser reexecutado para registrar os novos resultados.**
 
-O código de produção utilizado pelo notebook está em `src/`; portanto, o notebook funciona como demonstração reprodutível da solução, enquanto a lógica principal permanece organizada e reutilizável nos módulos Python.
+O código de produção utilizado pelos notebooks está em `src/`; portanto, os notebooks funcionam como documentação executável da jornada, enquanto a lógica principal permanece organizada e reutilizável nos módulos Python. Consulte [notebooks/README.md](notebooks/README.md) para a ordem de execução e os pré-requisitos.
 
 ---
 
