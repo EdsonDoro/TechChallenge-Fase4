@@ -477,3 +477,45 @@ Integrantes:
 Alessandra M. Capecce,
 Alessandro P. dos Santos,
 Edson L. Doro
+
+
+## 13. Anotação automática de relevância (conjunto silver)
+
+Para reduzir o trabalho manual, o projeto inclui `scripts/annotate_retrieval.py`.
+O script usa o modelo local configurado em `LLM_MODEL` (padrão: `llama3.2`)
+por meio da API compatível com OpenAI do Ollama. Ele classifica os comentários
+do arquivo `retrieval_annotation_candidates.csv` em relação à pergunta de cada
+grupo, atribuindo rótulo, confiança e justificativa.
+
+### Execução
+
+Com o Ollama instalado e o serviço ativo:
+
+```bash
+ollama pull llama3.2
+python scripts/annotate_retrieval.py
+```
+
+A classificação faz uma chamada ao modelo por pergunta (10 chamadas para o CSV
+atual), em vez de uma chamada por comentário. São gerados:
+
+- `data/evaluation/retrieval_annotation_auto.csv`: todos os candidatos com rótulo,
+  confiança e justificativa;
+- `data/evaluation/retrieval_silver.json`: conjunto de referência provisório,
+  contendo apenas rótulos `relevant` com confiança igual ou superior a 0,85.
+
+Para calcular métricas usando esse conjunto:
+
+```bash
+python scripts/evaluate_retrieval.py --gold-file data/evaluation/retrieval_silver.json
+```
+
+O limiar pode ser alterado, por exemplo, com
+`python scripts/annotate_retrieval.py --min-confidence 0.90`.
+
+**Limitação metodológica:** esses rótulos são *silver labels* produzidos por IA,
+não ground truth validado por avaliadores humanos. Os comentários foram
+selecionados pelo próprio retrieval (pool de candidatos), portanto as métricas
+são diagnósticas dentro desse conjunto e não devem ser interpretadas como uma
+medida independente ou definitiva da qualidade do sistema. O arquivo
+`retrieval_gold.json` original permanece preservado e não é sobrescrito.
