@@ -61,12 +61,18 @@ class RAGPipeline:
         return float(np.max(self._anchor_embeddings @ query))
 
     def validate_evidence(self, question, candidates):
+        """Distingue pergunta fora do domínio de falta de evidência recuperável."""
         if not candidates:
             return [], "insufficient_evidence"
-        top_score = float(candidates[0].get("score", 0.0))
+
         domain_score = self.domain_score(question)
-        if top_score < self.min_scope_score or domain_score < self.min_domain_score:
+        if domain_score < self.min_domain_score:
             return [], "out_of_scope"
+
+        top_score = float(candidates[0].get("score", 0.0))
+        if top_score < self.min_scope_score:
+            return [], "insufficient_evidence"
+
         return candidates, "supported"
 
     def retrieve(self, question):
@@ -96,6 +102,8 @@ class RAGPipeline:
 
         if status == "out_of_scope":
             answer = self.OUT_OF_SCOPE_MESSAGE
+        elif status == "insufficient_evidence":
+            answer = self.INSUFFICIENT_EVIDENCE_MESSAGE
         else:
             answer = self.generator.generate(question, evidence)
 
