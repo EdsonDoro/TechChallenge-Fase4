@@ -157,7 +157,8 @@ def main():
                 }
 
     if len(failed_groups) == len(grouped):
-        raise RuntimeError(\n            "Nenhuma pergunta pôde ser anotada. Verifique se o Ollama está ativo, "
+        raise RuntimeError(
+            "Nenhuma pergunta pôde ser anotada. Verifique se o Ollama está ativo, "
             "se o modelo está instalado e se OLLAMA_BASE_URL está correto."
         )
 \n    annotated_rows = []
