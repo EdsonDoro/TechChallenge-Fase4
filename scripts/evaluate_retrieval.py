@@ -37,7 +37,7 @@ def main():
     )
 
     provisional = sum(
-        item.get("annotation_status", "provisional") != "reviewed"
+        item.get("annotation_status", metadata.get("annotation_status", "provisional")) != "reviewed"
         for item in queries
     )
     if provisional:
@@ -53,7 +53,7 @@ def main():
         "queries": len(df),
         f"precision_at_{settings.top_k}": float(df[f"precision_at_k"].mean()),
         f"recall_at_{settings.top_k}": float(df[f"recall_at_k"].mean()),
-        "mrr": float(df["mrr"].mean()),
+        "mrr": float(df["mrr"].mean()),\n        "annotation_status": metadata.get("annotation_status", "provisional"),\n        "gold_file": str(args.gold_file),
     }
 
     print("=== AVALIAÇÃO QUANTITATIVA DO RETRIEVAL ===")
