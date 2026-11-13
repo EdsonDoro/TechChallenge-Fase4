@@ -15,8 +15,7 @@ class RAGPipeline:
     """Pipeline: pergunta -> retrieval -> validação -> contexto -> geração."""
 
     OUT_OF_SCOPE_MESSAGE = (
-        "A pergunta parece estar fora do escopo da base de conhecimento Olist "
-        "ou não possui evidências suficientes relacionadas ao tema. "
+        "A pergunta parece estar fora do escopo da base de conhecimento Olist. "
         "Não é possível responder com segurança usando as avaliações disponíveis."
     )
     INSUFFICIENT_EVIDENCE_MESSAGE = (
