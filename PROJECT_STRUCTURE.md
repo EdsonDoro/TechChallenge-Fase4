@@ -29,7 +29,12 @@ TechChallenge-Fase4/
 │   └── roteiro_video.md
 │
 ├── notebooks/
-│   └── 00_rag_completo.ipynb
+│   ├── 00_rag_completo.ipynb
+│   ├── 01_exploracao_olist.ipynb
+│   ├── 02_preparacao_base.ipynb
+│   ├── 03_embeddings_indexacao.ipynb
+│   ├── 04_avaliacao_rag.ipynb
+│   └── README.md
 │
 ├── scripts/
 │   ├── build_index.py
@@ -112,13 +117,16 @@ Contém a aplicação Streamlit para demonstração interativa.
 
 ### `notebooks/`
 
-Contém o notebook final da entrega:
+Contém quatro notebooks temáticos, executados na sequência da jornada:
 
-`00_rag_completo.ipynb`
+1. `01_exploracao_olist.ipynb`: exploração da tabela de avaliações;
+2. `02_preparacao_base.ipynb`: limpeza, enriquecimento e construção dos documentos;
+3. `03_embeddings_indexacao.ipynb`: geração dos vetores e persistência do FAISS;
+4. `04_avaliacao_rag.ipynb`: métricas, inspeção das evidências e cenários de segurança.
 
-Esse notebook consolida a jornada completa do projeto e foi executado de ponta a ponta.
+O notebook `00_rag_completo.ipynb` permanece como demonstração integrada de ponta a ponta.
 
-**O notebook deve permanecer alinhado à implementação de `src/` e ser reexecutado após alterações no pipeline que afetem seus resultados.**
+**Os notebooks temáticos reutilizam os módulos de `src/` e devem permanecer alinhados a eles. Execute-os em ordem, com os CSVs da Olist em `data/raw/`.**
 
 ### `tests/`
 
