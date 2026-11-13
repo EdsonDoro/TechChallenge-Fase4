@@ -140,6 +140,7 @@ def main():
         grouped.setdefault(row["question"], []).append(row)
 
     annotations = {}
+    failed_groups = []
     for index, (question, group_rows) in enumerate(grouped.items(), start=1):
         print(f"[{index}/{len(grouped)}] Classificando {len(group_rows)} comentários: {question}")
         try:
@@ -147,6 +148,7 @@ def main():
         except Exception as exc:
             # Não interrompe os demais grupos; os itens deste grupo ficam explicitamente incertos.
             print(f"  ERRO: {exc}")
+            failed_groups.append(question)
             for row in group_rows:
                 annotations[(question, row["document_id"])] = {
                     "auto_label": "uncertain",
@@ -154,7 +156,11 @@ def main():
                     "auto_reason": f"Falha na chamada ao modelo: {type(exc).__name__}",
                 }
 
-    annotated_rows = []
+    if len(failed_groups) == len(grouped):
+        raise RuntimeError(\n            "Nenhuma pergunta pôde ser anotada. Verifique se o Ollama está ativo, "
+            "se o modelo está instalado e se OLLAMA_BASE_URL está correto."
+        )
+\n    annotated_rows = []
     silver_queries = []
     for question, group_rows in grouped.items():
         relevant_ids = []
