@@ -1,0 +1,74 @@
+{
+  "summary": {
+    "Precision@5": 0.27999999999999997,
+    "Recall@5": 0.4,
+    "MRR": 0.4
+  },
+  "details": [
+    {
+      "question": "Quais são os principais problemas relacionados à entrega?",
+      "precision_at_k": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "retrieved_ids": [
+        "7d8d252cc0ae002b13db033ec1cd9dcb",
+        "048f89d5550f6d495dbfb726b23ba2a1",
+        "a1074ef6728469383f2a8bf58fd98e51",
+        "db6e80117789aa15d03c3406c7429845",
+        "b02ae085148e5e1eb6b11142ea9c653c"
+      ]
+    },
+    {
+      "question": "Quais problemas aparecem nos relatos de atraso ou demora na entrega?",
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "mrr": 0.0,
+      "retrieved_ids": [
+        "dd6e0f7168d75cd78769333f7630a036",
+        "14ab06af2677555bfcf9ff2e64a1b203",
+        "f02d4978f58368f3346d8450d52f0ba2",
+        "ab796da379bad664fa884f34711b0ca8",
+        "95e7f613e3dfe80a79306a8c80084739"
+      ]
+    },
+    {
+      "question": "Quais reclamações aparecem nas avaliações de baixa nota?",
+      "precision_at_k": 0.4,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "retrieved_ids": [
+        "e6440fb40ebd6225a3dedb2e1d6e7220",
+        "96b1d5f199ee9c1da0a952ffe8902cec",
+        "89e36888c39685c524a74270824e9fdb",
+        "9da6f73dde10ac7108db7686a03174c5",
+        "dc802d5e90de0becae76977219c9d247"
+      ]
+    },
+    {
+      "question": "O que os clientes relatam sobre a qualidade dos produtos?",
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "mrr": 0.0,
+      "retrieved_ids": [
+        "ac5bb807a20ac6e17c4fea902dd5c2d7",
+        "0cd25123ee693761394d2487b0fa3cc4",
+        "e2b4d5970fefa486994421aba7976be9",
+        "e2ef15f7e4530d14985b64b27913f99b",
+        "541b0f1c04cf05d526b766f0d7a799f0"
+      ]
+    },
+    {
+      "question": "Quais problemas de entrega são mencionados em relação aos Correios?",
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "mrr": 0.0,
+      "retrieved_ids": [
+        "35cdcb47d0c23f77c17d802e04c5132b",
+        "452cfaa876b9d0d505ae6ba3f0a217b1",
+        "77ab0789563a5269c2b37be6c00a5148",
+        "7d8d252cc0ae002b13db033ec1cd9dcb",
+        "3db2be53e8d7fe316c963e432ea778ab"
+      ]
+    }
+  ]
+}
