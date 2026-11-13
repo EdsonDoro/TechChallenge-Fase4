@@ -36,6 +36,16 @@ def main():
         min_domain_score=settings.min_domain_score,
     )
 
+    provisional = sum(
+        item.get("annotation_status", "provisional") != "reviewed"
+        for item in queries
+    )
+    if provisional:
+        print(
+            f"ATENÇÃO: {provisional}/{len(queries)} perguntas ainda têm "
+            "anotação provisória; interprete as métricas como diagnóstico."
+        )
+
     rows = evaluate_queries(pipeline, queries, k=settings.top_k)
     df = pd.DataFrame(rows)
 
