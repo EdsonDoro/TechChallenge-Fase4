@@ -37,11 +37,11 @@ def parse_model_response(content: str, expected_ids: set[str]) -> dict[str, dict
     """Extrai e valida os rótulos retornados pelo modelo."""
     text = content.strip()
     if text.startswith("```"):
-        text = re.sub(r"^\`\`\`(?:json)?\\s*|\\s*\`\`\`$", "", text, flags=re.I)
+        text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text, flags=re.I)
     try:
         payload = json.loads(text)
     except json.JSONDecodeError:
-        match = re.search(r"\\{.*\\}", text, flags=re.S)
+        match = re.search(r"\{.*\}", text, flags=re.S)
         if not match:
             raise ValueError("O modelo não retornou um objeto JSON válido.")
         payload = json.loads(match.group(0))
@@ -140,12 +140,12 @@ def main():
     for index, (question, group_rows) in enumerate(grouped.items(), start=1):
         print(f"[{index}/{len(grouped)}] Classificando {len(group_rows)} comentários: {question}")
         try:
-            annotations.update(classify_group(client, settings.llm_model, question, group_rows))
+            annotations.update({(question, doc_id): value for doc_id, value in classify_group(client, settings.llm_model, question, group_rows).items()})
         except Exception as exc:
             # Não interrompe os demais grupos; os itens deste grupo ficam explicitamente incertos.
             print(f"  ERRO: {exc}")
             for row in group_rows:
-                annotations[row["document_id"]] = {
+                annotations[(question, row["document_id"])] = {
                     "auto_label": "uncertain",
                     "auto_confidence": 0.0,
                     "auto_reason": f"Falha na chamada ao modelo: {type(exc).__name__}",
@@ -156,7 +156,7 @@ def main():
     for question, group_rows in grouped.items():
         relevant_ids = []
         for row in group_rows:
-            result = annotations.get(row["document_id"], {
+            result = annotations.get((question, row["document_id"]), {
                 "auto_label": "uncertain",
                 "auto_confidence": 0.0,
                 "auto_reason": "Sem classificação.",
