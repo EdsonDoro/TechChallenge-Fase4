@@ -8,16 +8,15 @@ from pathlib import Path
 
 import pandas as pd
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from config.settings import Settings
 from src.embeddings.embedder import EmbeddingModel
 from src.evaluation.evaluator import evaluate_queries
 from src.retrieval.retriever import VectorRetriever
 from src.rag.pipeline import RAGPipeline
-
-
-ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
 
 GOLD_FILE = ROOT / "data" / "evaluation" / "retrieval_gold.json"
 INDEX_DIR = ROOT / "data" / "vectorstore"
