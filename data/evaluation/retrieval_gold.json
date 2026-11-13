@@ -8,7 +8,8 @@
       "b02ae085148e5e1eb6b11142ea9c653c",
       "7d8d252cc0ae002b13db033ec1cd9dcb"
     ],
-    "annotation_note": "Conjunto inicial anotado a partir das avaliações exibidas na demonstração executada do notebook."
+    "annotation_note": "Conjunto inicial anotado a partir das avaliações exibidas na demonstração executada do notebook.",
+    "annotation_status": "provisional"
   },
   {
     "question": "Quais problemas aparecem nos relatos de atraso ou demora na entrega?",
@@ -19,7 +20,8 @@
       "b02ae085148e5e1eb6b11142ea9c653c",
       "7d8d252cc0ae002b13db033ec1cd9dcb"
     ],
-    "annotation_note": "Variação semântica da consulta de entrega; relevantes são avaliações que mencionam atraso/demora."
+    "annotation_note": "Variação semântica da consulta de entrega; relevantes são avaliações que mencionam atraso/demora.",
+    "annotation_status": "provisional"
   },
   {
     "question": "Quais reclamações aparecem nas avaliações de baixa nota?",
@@ -27,7 +29,8 @@
       "e6440fb40ebd6225a3dedb2e1d6e7220",
       "96b1d5f199ee9c1da0a952ffe8902cec"
     ],
-    "annotation_note": "Relevantes confirmadas na saída executada do notebook; o conjunto pode ser ampliado em avaliação futura."
+    "annotation_note": "Relevantes confirmadas na saída executada do notebook; o conjunto pode ser ampliado em avaliação futura.",
+    "annotation_status": "provisional"
   },
   {
     "question": "O que os clientes relatam sobre a qualidade dos produtos?",
@@ -38,7 +41,8 @@
       "6a91312bbb6400cace32af61902c5649",
       "f172caf26676f837f787028f92418fc5"
     ],
-    "annotation_note": "Pergunta corrigida para medir qualidade do produto, pois a demonstração anterior usava indevidamente a expressão categorias."
+    "annotation_note": "Pergunta corrigida para medir qualidade do produto, pois a demonstração anterior usava indevidamente a expressão categorias.",
+    "annotation_status": "provisional"
   },
   {
     "question": "Quais problemas de entrega são mencionados em relação aos Correios?",
@@ -46,6 +50,7 @@
       "e06d9a717c61331208eabed007431c41",
       "a553875413fd30a7f78cd701b0064a6f"
     ],
-    "annotation_note": "Relevantes confirmadas na demonstração inicial: problemas/atraso associados aos Correios."
+    "annotation_note": "Relevantes confirmadas na demonstração inicial: problemas/atraso associados aos Correios.",
+    "annotation_status": "provisional"
   }
 ]
