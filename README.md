@@ -365,7 +365,7 @@ streamlit run app/streamlit_app.py
 
 ### Avaliação quantitativa do retrieval
 
-O conjunto anotado está em `data/evaluation/retrieval_gold.json`. Para reproduzir a avaliação após construir o índice:
+O conjunto inicial está em `data/evaluation/retrieval_gold.json` e suas anotações estão explicitamente marcadas como provisórias. O notebook 04 também gera `data/evaluation/retrieval_annotation_candidates.csv`, com candidatos para dez temas, para revisão manual. Não trate os resultados como avaliação final até confirmar os rótulos pela leitura dos comentários e atualizar o conjunto-ouro. Para reproduzir a avaliação após construir o índice:
 
 ```bash
 python scripts/evaluate_retrieval.py
