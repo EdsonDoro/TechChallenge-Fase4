@@ -1,6 +1,7 @@
-"""Executa a avaliação quantitativa do retrieval com o conjunto anotado."""
+"""Executa a avaliação quantitativa do retrieval com um conjunto de referência."""
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
@@ -19,9 +20,23 @@ INDEX_DIR = ROOT / "data" / "vectorstore"
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--gold-file",
+        type=Path,
+        default=GOLD_FILE,
+        help="JSON de referência; aceita tanto a lista original quanto o formato silver.",
+    )
+    args = parser.parse_args()
+
     settings = Settings()
-    with GOLD_FILE.open(encoding="utf-8") as f:
-        queries = json.load(f)
+    with args.gold_file.open(encoding="utf-8") as file:
+        payload = json.load(file)
+
+    metadata = payload.get("metadata", {}) if isinstance(payload, dict) else {}
+    queries = payload.get("queries", []) if isinstance(payload, dict) else payload
+    if not queries:
+        raise ValueError(f"Nenhuma consulta válida encontrada em {args.gold_file}")
 
     retriever = VectorRetriever.load(INDEX_DIR)
     embedder = EmbeddingModel(settings.embedding_model)
@@ -42,18 +57,19 @@ def main():
     )
     if provisional:
         print(
-            f"ATENÇÃO: {provisional}/{len(queries)} perguntas ainda têm "
-            "anotação provisória; interprete as métricas como diagnóstico."
+            f"ATENÇÃO: {provisional}/{len(queries)} perguntas têm anotações "
+            "provisórias ou automáticas; interprete as métricas como diagnóstico."
         )
 
     rows = evaluate_queries(pipeline, queries, k=settings.top_k)
     df = pd.DataFrame(rows)
-
     summary = {
         "queries": len(df),
-        f"precision_at_{settings.top_k}": float(df[f"precision_at_k"].mean()),
-        f"recall_at_{settings.top_k}": float(df[f"recall_at_k"].mean()),
-        "mrr": float(df["mrr"].mean()),\n        "annotation_status": metadata.get("annotation_status", "provisional"),\n        "gold_file": str(args.gold_file),
+        f"precision_at_{settings.top_k}": float(df["precision_at_k"].mean()),
+        f"recall_at_{settings.top_k}": float(df["recall_at_k"].mean()),
+        "mrr": float(df["mrr"].mean()),
+        "annotation_status": metadata.get("annotation_status", "provisional"),
+        "gold_file": str(args.gold_file),
     }
 
     print("=== AVALIAÇÃO QUANTITATIVA DO RETRIEVAL ===")
