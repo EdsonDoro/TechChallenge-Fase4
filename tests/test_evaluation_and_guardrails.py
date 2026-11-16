@@ -71,3 +71,24 @@ def test_auto_annotation_parser_handles_fenced_json_and_invalid_labels():
     )
     assert result["doc-1"]["auto_label"] == "uncertain"
     assert result["doc-1"]["auto_confidence"] == 0.0
+
+
+
+def test_auto_annotation_chunk_rows_splits_candidates_into_small_batches():
+    from scripts.annotate_retrieval import chunk_rows
+
+    rows = [{"document_id": str(index)} for index in range(12)]
+    batches = list(chunk_rows(rows, batch_size=5))
+
+    assert [len(batch) for batch in batches] == [5, 5, 2]
+    assert [row["document_id"] for batch in batches for row in batch] == [
+        str(index) for index in range(12)
+    ]
+
+
+def test_auto_annotation_chunk_rows_rejects_non_positive_batch_size():
+    import pytest
+    from scripts.annotate_retrieval import chunk_rows
+
+    with pytest.raises(ValueError):
+        list(chunk_rows([{"document_id": "a"}], batch_size=0))
