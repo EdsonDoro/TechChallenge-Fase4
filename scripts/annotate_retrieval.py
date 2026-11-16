@@ -98,26 +98,68 @@ def chunk_rows(rows: list[dict], batch_size: int = BATCH_SIZE):
 
 
 def classify_group(client, model: str, question: str, rows: list[dict]) -> dict[str, dict]:
-    candidates = [
-        {"document_id": row["document_id"], "comment": row.get("comment", "")}
-        for row in rows
-    ]
-    user_prompt = (
-        f"PERGUNTA:\n{question}\n\n"
-        "CLASSIFIQUE INDIVIDUALMENTE OS COMENTÁRIOS ABAIXO. "
-        "Retorne exatamente um item por document_id.\n"
-        + json.dumps(candidates, ensure_ascii=False)
-    )
-    response = client.chat.completions.create(
-        model=model,
-        temperature=0,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_prompt},
-        ],
-    )
-    content = response.choices[0].message.content or ""
-    return parse_model_response(content, {row["document_id"] for row in rows})
+    """Classifica um lote e tenta individualmente itens ausentes ou respostas inválidas."""
+    def request(batch: list[dict]) -> dict[str, dict]:
+        candidates = [
+            {"document_id": row["document_id"], "comment": row.get("comment", "")}
+            for row in batch
+        ]
+        user_prompt = (
+            f"PERGUNTA:\n{question}\n\n"
+            "Classifique individualmente cada comentário. Não omita nenhum ID. "
+            "Retorne um objeto JSON com a chave items e exatamente um item por ID.\n"
+            + json.dumps(candidates, ensure_ascii=False)
+        )
+        response = client.chat.completions.create(
+            model=model,
+            temperature=0,
+            max_tokens=1024,
+            response_format={"type": "json_object"},
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_prompt},
+            ],
+        )
+        content = response.choices[0].message.content or ""
+        return parse_model_response(
+            content, {row["document_id"] for row in batch}
+        )
+
+    try:
+        results = request(rows)
+    except Exception as exc:
+        # Se o JSON do lote estiver inválido, tenta cada comentário isoladamente.
+        results = {}
+        pending = list(rows)
+        batch_error = f"{type(exc).__name__}: {exc}"
+    else:
+        pending = [
+            row for row in rows
+            if results[row["document_id"]]["auto_reason"].startswith(
+                "O modelo não retornou uma classificação válida"
+            )
+        ]
+        batch_error = ""
+
+    for row in pending:
+        document_id = row["document_id"]
+        try:
+            individual = request([row])
+            results[document_id] = individual[document_id]
+        except Exception as exc:
+            results[document_id] = {
+                "auto_label": "uncertain",
+                "auto_confidence": 0.0,
+                "auto_reason": (
+                    "Falha também na tentativa individual: "
+                    f"{type(exc).__name__}"
+                ),
+            }
+
+    if batch_error and pending:
+        print(f"  AVISO: lote inválido ({batch_error}); itens tentados individualmente.")
+
+    return results
 
 
 def main():
