@@ -26,13 +26,15 @@ SYSTEM_PROMPT = """Você é um avaliador de relevância para um sistema de busca
 sobre avaliações de clientes do e-commerce brasileiro Olist.
 Classifique cada comentário APENAS em relação à pergunta fornecida.
 Use somente o texto do comentário; não invente contexto.
-' relevant ' significa que o comentário contém informação que ajuda diretamente
+'relevant' significa que o comentário contém informação que ajuda diretamente
 a responder à pergunta. 'not_relevant' significa que não ajuda a respondê-la.
 'uncertain' deve ser usado quando o texto é ambíguo, insuficiente ou contraditório.
 Não use a nota do review nem a similaridade como prova de relevância.
-Responda exclusivamente com JSON válido no formato:
-{"items":[{"document_id":"...","label":"relevant|not_relevant|uncertain",
-"confidence":0.0,"reason":"justificativa curta"}]}.
+Classifique TODOS os comentários recebidos, sem omitir nenhum.
+Use exatamente o document_id fornecido, sem modificá-lo.
+A justificativa deve ter no máximo 12 palavras.
+Responda exclusivamente com um único objeto JSON válido, sem Markdown:
+{"items":[{"document_id":"ID_EXATO","label":"relevant","confidence":0.0,"reason":"justificativa curta"}]}.
 A confiança deve refletir a certeza semântica da classificação, entre 0 e 1.
 """
 
@@ -82,6 +84,17 @@ def parse_model_response(content: str, expected_ids: set[str]) -> dict[str, dict
             "auto_reason": "O modelo não retornou uma classificação válida para este documento.",
         }
     return parsed
+
+
+BATCH_SIZE = 5
+
+
+def chunk_rows(rows: list[dict], batch_size: int = BATCH_SIZE):
+    """Divide os candidatos em lotes pequenos para reduzir respostas incompletas."""
+    if batch_size < 1:
+        raise ValueError("batch_size deve ser maior que zero.")
+    for start in range(0, len(rows), batch_size):
+        yield rows[start:start + batch_size]
 
 
 def classify_group(client, model: str, question: str, rows: list[dict]) -> dict[str, dict]:
@@ -140,23 +153,51 @@ def main():
         grouped.setdefault(row["question"], []).append(row)
 
     annotations = {}
-    failed_groups = []
-    for index, (question, group_rows) in enumerate(grouped.items(), start=1):
-        print(f"[{index}/{len(grouped)}] Classificando {len(group_rows)} comentários: {question}")
-        try:
-            annotations.update({(question, doc_id): value for doc_id, value in classify_group(client, settings.llm_model, question, group_rows).items()})
-        except Exception as exc:
-            # Não interrompe os demais grupos; os itens deste grupo ficam explicitamente incertos.
-            print(f"  ERRO: {exc}")
-            failed_groups.append(question)
-            for row in group_rows:
-                annotations[(question, row["document_id"])] = {
-                    "auto_label": "uncertain",
-                    "auto_confidence": 0.0,
-                    "auto_reason": f"Falha na chamada ao modelo: {type(exc).__name__}",
-                }
+    total_batches = sum(
+        (len(group_rows) + BATCH_SIZE - 1) // BATCH_SIZE
+        for group_rows in grouped.values()
+    )
+    processed_batches = 0
+    failed_batches = 0
 
-    if len(failed_groups) == len(grouped):
+    for question_index, (question, group_rows) in enumerate(grouped.items(), start=1):
+        batches = list(chunk_rows(group_rows))
+        for batch_index, batch in enumerate(batches, start=1):
+            processed_batches += 1
+            print(
+                f"[{processed_batches}/{total_batches}] "
+                f"Pergunta {question_index}/{len(grouped)}, "
+                f"lote {batch_index}/{len(batches)}: "
+                f"{len(batch)} comentários"
+            )
+            try:
+                batch_result = classify_group(
+                    client, settings.llm_model, question, batch
+                )
+                annotations.update({
+                    (question, doc_id): value
+                    for doc_id, value in batch_result.items()
+                })
+                incomplete = sum(
+                    value["auto_reason"].startswith(
+                        "O modelo não retornou uma classificação válida"
+                    )
+                    for value in batch_result.values()
+                )
+                if incomplete:
+                    print(f"  AVISO: {incomplete} comentário(s) sem classificação válida.")
+            except Exception as exc:
+                # Não interrompe os demais lotes; somente este lote fica incerto.
+                print(f"  ERRO no lote: {exc}")
+                failed_batches += 1
+                for row in batch:
+                    annotations[(question, row["document_id"])] = {
+                        "auto_label": "uncertain",
+                        "auto_confidence": 0.0,
+                        "auto_reason": f"Falha na chamada ao modelo: {type(exc).__name__}",
+                    }
+
+    if failed_batches == total_batches:
         raise RuntimeError(
             "Nenhuma pergunta pôde ser anotada. Verifique se o Ollama está ativo, "
             "se o modelo está instalado e se OLLAMA_BASE_URL está correto."
