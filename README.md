@@ -497,7 +497,9 @@ python scripts/annotate_retrieval.py
 ```
 
 Para reduzir respostas incompletas do modelo, os comentários são processados em
-lotes de até 5 por chamada (40 chamadas para os 200 candidatos atuais). São gerados:
+lotes de até 5 por chamada. A API é solicitada em modo JSON; quando a resposta do
+lote vem incompleta ou inválida, o script tenta novamente os comentários afetados
+individualmente. Assim, o número de chamadas pode ser maior que 40. São gerados:
 
 - `data/evaluation/retrieval_annotation_auto.csv`: todos os candidatos com rótulo,
   confiança e justificativa;
