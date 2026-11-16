@@ -496,8 +496,8 @@ ollama pull llama3.2
 python scripts/annotate_retrieval.py
 ```
 
-A classificação faz uma chamada ao modelo por pergunta (10 chamadas para o CSV
-atual), em vez de uma chamada por comentário. São gerados:
+Para reduzir respostas incompletas do modelo, os comentários são processados em
+lotes de até 5 por chamada (40 chamadas para os 200 candidatos atuais). São gerados:
 
 - `data/evaluation/retrieval_annotation_auto.csv`: todos os candidatos com rótulo,
   confiança e justificativa;
