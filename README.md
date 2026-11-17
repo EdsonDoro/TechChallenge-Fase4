@@ -448,7 +448,7 @@ A entrega também separa a lógica de produção em módulos Python e utiliza o 
 
 ## 17. Video Apresentação
 
-<a href="https://youtu.be/" target="_blank">Assista a apresentação</a>
+[Assista à apresentação no YouTube](https://youtu.be/dVEIq97a7Fk)
 
 
 ---
